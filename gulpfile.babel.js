@@ -8,7 +8,7 @@ const plugins = gulpLoadPlugins();
 
 const paths = {
   js: ['./**/*.js', '!dist/**', '!docs/**', '!node_modules/**', '!coverage/**'],
-  nonJs: ['./package.json', './.gitignore', './.leanignore', 'love.ico'],
+  nonJs: ['./package.json', './.gitignore'],
   tests: './server/tests/*.js'
 };
 
@@ -24,6 +24,20 @@ gulp.task('copy', () =>
     .pipe(gulp.dest('dist'))
 );
 
+//copy static
+gulp.task('copy:static', () => {
+  gulp.src(['./src/static/**/**.**', './src/static/**/**/**.**'])
+    .pipe(plugins.newer('dist/src/static'))
+    .pipe(gulp.dest('dist/src/static'))
+})
+
+//copy view
+gulp.task('copy:view', () => {
+  gulp.src(['./src/views/**/**.**', './src/views/**/**/**.**'])
+    .pipe(plugins.newer('dist/src/views'))
+    .pipe(gulp.dest('dist/src/views'))
+})
+
 // Compile ES6 to ES5 and copy to dist
 gulp.task('babel', () =>
   gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
@@ -33,12 +47,12 @@ gulp.task('babel', () =>
 );
 
 // Start server with restart on file changes
-gulp.task('nodemon', ['copy', 'babel'], () =>
+gulp.task('nodemon', ['copy', 'copy:static', 'copy:view', 'babel'], () =>
   plugins.nodemon({
     script: path.join('dist', 'server.js'),
     ext: 'js',
     ignore: ['node_modules/**/*.js', 'dist/**/*.js'],
-    tasks: ['copy', 'babel']
+    tasks: ['copy', 'copy:static', 'copy:view', 'babel']
   })
 );
 

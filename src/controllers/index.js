@@ -8,13 +8,13 @@ router.get('/', function(req, res, next) {
     res.send("hope is hope, nerver lose his way")
 })
 
-const path = config.rootPath + '/src/resources/**/**.route.js'
+const path = config.rootPath + '/src/controllers/**.controller.js'
 let routes = glob.sync(path)
 
 routes.forEach(function(route) {
   console.log('Loading route：' + route)
   let routeCtrl = require(route)
-  router.use(routeCtrl.baseUrl, routeCtrl.router)
+  router.use(routeCtrl.url, routeCtrl.router)
 })
 
 export default router

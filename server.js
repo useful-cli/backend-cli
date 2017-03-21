@@ -11,10 +11,10 @@ import app from './config/express';
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
 
 // connect to mongo db
-connect()
-    .on('error', console.log)
-    .on('disconnected', connect)
-    .once('open', listen);
+// connect()
+//     .on('error', console.log)
+//     .on('disconnected', connect)
+//     .once('open', listen);
 
 function listen() {
     const server = http.createServer(app);
@@ -33,16 +33,18 @@ function listen() {
     });
 }
 
+listen()
+
 function connect() {
     // print mongoose logs in dev env
     var options = { server: { socketOptions: { keepAlive: 1 } } };
     return mongoose.connect(config.db, options).connection;
 }
 
-if (config.MONGOOSE_DEBUG) {
-    mongoose.set('debug', (collectionName, method, query, doc) => {
-        debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
-    });
-}
+// if (config.MONGOOSE_DEBUG) {
+//     mongoose.set('debug', (collectionName, method, query, doc) => {
+//         debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
+//     });
+// }
 
 export default app;
